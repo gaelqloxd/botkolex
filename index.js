@@ -161,27 +161,33 @@ socket.on("market-sold", async (data) => {
     const title = card.itemName || "Carta desconocida";
     const mint = card.mintNumber || "??";
     const price = data.market?.price || "?";
-
+console.log("🧪 SOLD ENTITY:", card);
     
-    // 🖼️ IMAGEN
-   
-   let image = null;
+    let image = null;
 
-// 🥇 CASO 1: imagen directa (TU CASO)
+// 🥇 intento 1: string directo
 if (typeof card.images === "string") {
   image = card.images;
 }
 
-// 🥈 CASO 2: objeto de imágenes
+// 🥈 intento 2: objeto images
 else if (card.images && typeof card.images === "object") {
   const values = Object.values(card.images);
   image = values.find(v => typeof v === "string" && v.includes(".png"));
 }
 
-// 🥉 fallback template
+// 🥉 intento 3: entity.image (a veces viene aquí 👀)
+if (!image && card.image) {
+  image = card.image;
+}
+
+
+// 🧨 fallback final
 if (!image && card.templateId) {
   image = `https://cdn2.kolex.gg/card-template/render/${card.templateId}/402x670.png`;
 }
+
+console.log("🖼️ SOLD IMAGE:", image);
 
     // 🔥 SOLO HERO
     if (
